@@ -15,6 +15,7 @@ class QNetwork(nn.Module):
 
 class DQNAgent():
     def __init__(self, state_size, action_size):
+        self.state_dicts_dictionary = {}
         self.state_size = state_size
         self.action_size = action_size
         self.memory = deque(maxlen=10000)
@@ -38,8 +39,10 @@ class DQNAgent():
     def act(self, state):
         rndmnumber = rndm.random()
         if rndmnumber < self.epsilon:
+            #print("rndm action")
             return rndm.randrange(self.action_size)
         else:
+            #print("replay action")
             state_t = torch.FloatTensor(state).unsqueeze(0)
             output = self.policy_net(state_t)
             return output.argmax().item()

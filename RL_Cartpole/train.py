@@ -1,8 +1,9 @@
 import gymnasium as gym
 from agent import DQNAgent
 import torch
+import copy
 
-episode_count = 300
+episode_count = 100
 
 env = gym.make("CartPole-v1")
 env.metadata['render_fps'] = 120
@@ -24,7 +25,9 @@ for i in range(episode_count):
         agent.replay()
         state = next_state
         total_reward += reward
+    agent.state_dicts_dictionary[i + 1] = copy.deepcopy(agent.policy_net.state_dict())
     print(f"Episode {i+1}  score: {total_reward}")
 
-torch.save(agent.policy_net.state_dict(), "cartpole_dqn.pth")
-print("Model saved")
+saved_episode = int(input("Which episode would you like to save?"))
+torch.save(agent.state_dicts_dictionary[saved_episode], "cartpole_dqn.pth")
+print(f"Model {saved_episode} saved!!")
